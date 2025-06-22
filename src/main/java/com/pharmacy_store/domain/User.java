@@ -17,10 +17,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long user_id;
-    @NotBlank
+    @NotBlank(message = " Không để trống tên")
     private String name;
-    @NotBlank
+    @NotBlank(message = "không để trống email")
     private String email;
-    @NotBlank
+    @NotBlank(message = "Bắt buộc có password")
     private String password;
 }

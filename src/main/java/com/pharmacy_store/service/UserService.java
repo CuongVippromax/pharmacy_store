@@ -55,6 +55,7 @@ public class UserService {
             updateUser.setName(user.getName());
             updateUser.setEmail(user.getEmail());
             updateUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
+            this.userRepository.save(updateUser);
             return updateUser;
         } else {
             return null;
@@ -64,5 +65,9 @@ public class UserService {
 
     public void deleteUser(long id) {
         this.userRepository.deleteById(id);
+    }
+
+    public User checkUserforUserDetails(String email) {
+        return this.userRepository.findByEmail(email);
     }
 }

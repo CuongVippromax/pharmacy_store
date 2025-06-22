@@ -17,7 +17,7 @@ import com.pharmacy_store.domain.Categoryy;
 import com.pharmacy_store.service.CategoryService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 public class CategoryControllerAdmin {
     private final CategoryService categoryService;
 

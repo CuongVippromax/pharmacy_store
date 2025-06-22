@@ -20,7 +20,7 @@ import com.pharmacy_store.repository.UserRepository;
 import com.pharmacy_store.service.UserService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 public class UserControllerAdmin {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -58,13 +58,7 @@ public class UserControllerAdmin {
         return ResponseEntity.ok().body(user);
     }
 
-    @PutMapping("/user/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable long id) {
-        User updatedUser = this.userService.updateUser(user, id);
-        return ResponseEntity.ok().body(updatedUser);
-    }
-
-    @DeleteMapping("/user{id}")
+    @DeleteMapping("/user/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable long id) {
         this.userService.deleteUser(id);
         return ResponseEntity.ok().body("Delete Succesfully !!!");

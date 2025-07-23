@@ -25,7 +25,7 @@ public class ProductControllerAdmin {
         this.productService = productService;
     }
 
-    @PostMapping("/product")
+    @PostMapping("/products")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         Product newProduct = this.productService.createProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
@@ -37,7 +37,7 @@ public class ProductControllerAdmin {
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping("/product")
+    @GetMapping("/product/{id}")
     public ResponseEntity<Product> getProduct(long id) {
         Product getProduct = this.productService.getProductById(id);
         return ResponseEntity.ok().body(getProduct);

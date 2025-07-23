@@ -10,9 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResUserDTO {
+public class ResCrearteUserDTO {
 
-    private long id;
     @NotBlank
     private String name;
     @NotBlank

@@ -2,6 +2,9 @@ package com.pharmacy_store.controller.admin;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,15 +12,17 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pharmacy_store.domain.User;
-import com.pharmacy_store.domain.dto.ResUserDTO;
+import com.pharmacy_store.domain.dto.ResCrearteUserDTO;
+import com.pharmacy_store.domain.dto.pagination.Meta;
+import com.pharmacy_store.domain.dto.pagination.ResultPagination;
 import com.pharmacy_store.repository.UserRepository;
 import com.pharmacy_store.service.UserService;
+import com.turkraft.springfilter.boot.Filter;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -33,13 +38,13 @@ public class UserControllerAdmin {
         this.userRepository = userRepository;
     }
 
-    @PostMapping("/user")
-    public ResponseEntity<ResUserDTO> createUser(@RequestBody User user) {
+    @PostMapping("/register")
+    public ResponseEntity<ResCrearteUserDTO> createUser(@RequestBody User user) {
         User newUser = new User();
         newUser.setName(user.getName());
         newUser.setEmail(user.getEmail());
         newUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
-        ResUserDTO newResUser = new ResUserDTO();
+        ResCrearteUserDTO newResUser = new ResCrearteUserDTO();
         newResUser.setName(user.getName());
         newResUser.setEmail(user.getEmail());
         this.userRepository.save(newUser);
@@ -47,9 +52,9 @@ public class UserControllerAdmin {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUser() {
-        List<User> list = this.userService.getAllUser();
-        return ResponseEntity.ok().body(list);
+    public ResponseEntity<ResultPagination> getAllUser(@Filter Specification<User> spec, Pageable pageable) {
+
+        return ResponseEntity.ok().body(this.userService.getAllUser(spec, pageable));
     }
 
     @GetMapping("/user/{id}")

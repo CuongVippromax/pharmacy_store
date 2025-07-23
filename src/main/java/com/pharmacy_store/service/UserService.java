@@ -1,14 +1,18 @@
 package com.pharmacy_store.service;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pharmacy_store.domain.User;
+import com.pharmacy_store.domain.dto.pagination.Meta;
+import com.pharmacy_store.domain.dto.pagination.ResultPagination;
+import com.pharmacy_store.exception.CustomMessageError;
 import com.pharmacy_store.repository.UserRepository;
-import com.pharmacy_store.util.error.GlobalErrorMessage;
 
 @Service
 public class UserService {
@@ -20,9 +24,9 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User createUser(User user) throws GlobalErrorMessage {
+    public User createUser(User user) throws CustomMessageError {
         if (this.userRepository.existsByEmail(user.getEmail()) == false) {
-            throw new GlobalErrorMessage("Email này đã tồn tại trong hệ thống");
+            throw new CustomMessageError("Email này đã tồn tại trong hệ thống");
         } else {
             User newUser = new User();
             newUser.setName(user.getName());
@@ -33,9 +37,18 @@ public class UserService {
         }
     }
 
-    public List<User> getAllUser() {
-        List<User> listUser = this.userRepository.findAll();
-        return listUser;
+    public ResultPagination getAllUser(Specification<User> spec, Pageable pageable) {
+        Page<User> listUser = this.userRepository.findAll(spec, pageable);
+        ResultPagination res = new ResultPagination();
+        Meta meta = new Meta();
+        meta.setPage(pageable.getPageNumber() + 1);
+        meta.setPageSize(pageable.getPageSize());
+        meta.setPages(listUser.getTotalPages());
+        meta.setTotal(listUser.getTotalElements());
+
+        res.setMeta(meta);
+        res.setResult(listUser.getContent());
+        return res;
     }
 
     public User getUserById(long id) {
